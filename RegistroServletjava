@@ -1,0 +1,69 @@
+package net.registro.controller;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import net.registro.dao.IngresoDao;
+import net.registro.model.Ingreso;
+import java.io.IOException;
+import jakarta.servlet.RequestDispatcher;
+
+/**
+ * Servlet implementation class RegistroServlet
+ */
+@WebServlet("/registro")
+public class RegistroServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	private IngresoDao ingresoDao = new IngresoDao();
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public RegistroServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		RequestDispatcher dispatcher = (RequestDispatcher) request.getRequestDispatcher("/WEB-INF/views/specieregister.jsp");
+		dispatcher.forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String grupo = request.getParameter("grupo");
+		String tipo = request.getParameter("tipo");
+		String nombre_comun = request.getParameter("nombre_comun");
+		String genero = request.getParameter("genero");
+		String especie = request.getParameter("especie");
+		
+		Ingreso ingreso = new Ingreso();
+		ingreso.setGrupo(grupo);
+		ingreso.setTipo(tipo);
+		ingreso.setNombre_comun(nombre_comun);
+		ingreso.setGenero(genero);
+		ingreso.setEspecie(especie);
+		
+		try {
+		ingresoDao.registerSpecie(ingreso);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher dispatcher = (RequestDispatcher) request.getRequestDispatcher("/WEB-INF/views/speciedetails.jsp");
+		dispatcher.forward(request, response);
+		
+	}
+
+}
