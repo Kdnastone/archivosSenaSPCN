@@ -1,0 +1,42 @@
+package net.registro.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import net.registro.model.Ingreso;
+
+public class IngresoDao {
+
+    public int registerSpecie(Ingreso ingreso) throws ClassNotFoundException {
+        String INSERT_USERS_SQL = "INSERT INTO registro" +
+                " (id, grupo, tipo, nombre_comun, genero, especie) VALUES " +
+                " (?,?,?,?,?,?); ";
+
+        int result = 0;
+
+        Class.forName("com.mysql.jdbc.Driver");
+
+        try (Connection connection = DriverManager.getConnection
+                ("jdbc:mysql://localhost:3306/registro?useSSL=false", "root", "@11h05r20y12");
+
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
+
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, ingreso.getGrupo());
+            preparedStatement.setString(3, ingreso.getTipo());
+            preparedStatement.setString(4, ingreso.getNombre_comun());
+            preparedStatement.setString(5, ingreso.getGenero());
+            preparedStatement.setString(6, ingreso.getEspecie());
+
+            System.out.println(preparedStatement);
+
+            result = preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+}
+
